@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
-    "name": "Amazon Container",
-    "version": "2.0.0",
+    "name": "Alibaba Container",
+    "version": "0.0.1",
 
-    "description": "Amazon Container isolates your Amazon activity from the rest of your web activity in order to prevent Amazon from tracking you outside of the Amazon ecosystem via third party cookies.",
+    "description": "Alibaba Container isolates your Alibaba and Aliexpress activity from the rest of your web activity in order to prevent Alibaba from tracking you outside of their ecosystem via third party cookies.",
 
     "icons": {
         "48": "icon.svg",
@@ -17,7 +17,7 @@
       }
     },
 
-    "homepage_url": "https://github.com/krober/contain-amazon",
+    "homepage_url": "https://github.com/syslev/contain-alibaba",
 
     "permissions": [
         "<all_urls>",
