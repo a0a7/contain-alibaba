@@ -1,140 +1,40 @@
 // Param values from https://developer.mozilla.org/Add-ons/WebExtensions/API/contextualIdentities/create
-const AMAZON_CONTAINER_DETAILS = {
-  name: "Amazon",
+const ALIBABA_CONTAINER_DETAILS = {
+  name: "Alibaba",
   color: "orange",
   icon: "briefcase"
 };
 
-const AMAZON_NATIONAL_DOMAINS = [
-  "amazon.cn",
-  "amazon.in",
-  "amazon.co.jp",
-  "amazon.com.sg",
-  "amazon.com.tr",
-  "amazon.fr",
-  "amazon.de",
-  "amazon.it",
-  "amazon.nl",
-  "amazon.es",
-  "amazon.co.uk",
-  "amazon.ca",
-  "amazon.com.mx",
-  "amazon.com.au",
-  "amazon.com.br",
-  "amazon.ae",
-  "amazon.se",
-  "amazon.sg",
-  "amazon.com.be",
-  "amazon.eg",
-  "amazon.pl",
-  "amazon.sa"
+const ALIBABA_DOMAINS = [
+  "alibabacloud.com",
+  "alibaba.com",
+  "alibaba.us",
+  ""
 ];
 
-const AMAZON_TLD_DOMAINS = [
-  "amazon.clothing",
-  "amazon.com",
-  "amazon.company",
-  "amazon.cruises",
-  "amazon.dog",
-  "amazon.energy",
-  "amazon.express",
-  "amazon.fund",
-  "amazon.game",
-  "amazon.gd",
-  "amazon.gent",
-  "amazon.hockey",
-  "amazon.international",
-  "amazon.jobs",
-  "amazon.kiwi",
-  "amazon.ltda",
-  "amazon.press",
-  "amazon.re",
-  "amazon.salon",
-  "amazon.shopping",
-  "amazon.soccer",
-  "amazon.tickets",
-  "amazon.tienda",
-  "amazon.tours",
-  "amazon.training",
-  "amazon.tv",
-  "amazon.wiki"
+const ALIEXPRESS_DOMAINS = [
 ];
 
-const AUDIBLE_DOMAINS = [
-  "audible.com",
-  "audible.co.uk",
-  "audible.fr",
-  "audible.com.au",
-  "audible.de",
-  "audible.it",
-  "audible.ca",
-  "audible.in",
-  "audible.co.jp"
+const ALIBABA_SERVICES_DOMAINS = [
 ];
 
-const WHOLEFOODS_DOMAINS = [
-  "wholefoodsmarket.com",
-  "wholefoodsmarket.co.uk"
-];
 
-const AMAZON_SERVICES_DOMAINS = [
-  "aboutamazon.com",
-  "alexa.com",
-  "amazoninspire.com",
-  "amazonpay.in",
-  "amazonteam.org",
-  "amzn.to",
-  "awscloud.com",
-  "awsevents.com",
-  "primevideo.com",
-  "twitch.com",
-  "twitch.tv",
-  "ext-twitch.tv"
-];
-
-let AMAZON_DOMAINS = [
-  "6pm.com",
-  "abebooks.com",
-  "acx.com",
-  "bookdepository.com",
-  "boxofficemojo.com",
-  "comixology.com",
-  "createspace.com",
-  "dpreview.com",
-  "eastdane.com",
-  "fabric.com",
-  "goodreads.com",
-  "imdb.com",
-  "junglee.com",
-  "lab126.com",
-  "mturk.com",
-  "seattlespheres.com",
-  "shopbop.com",
-  "souq.com",
-  "tenmarks.com",
-  "withoutabox.com",
-  "woot.com",
-  "zappos.com"
-];
-
-AMAZON_DOMAINS = AMAZON_DOMAINS.concat(
-  AMAZON_NATIONAL_DOMAINS, 
-  AMAZON_TLD_DOMAINS, 
-  AUDIBLE_DOMAINS,
-  WHOLEFOODS_DOMAINS,
-  AMAZON_SERVICES_DOMAINS
+ALIBABA_DOMAINS = ALIBABA_DOMAINS.concat(
+  ALIBABA_DOMAINS, 
+  ALIEXPRESS_DOMAINS, 
+  ALIBABA_SERVICES_DOMAINS
 );
 
 const MAC_ADDON_ID = "@testpilot-containers";
 
 let macAddonEnabled = false;
-let amazonCookieStoreId = null;
+let alibabaCookieStoreId = null;
 
 const canceledRequests = {};
 const tabsWaitingToLoad = {};
 const tabStates = {};
 
-const amazonHostREs = [];
+const alibabaHostREs = [];
 
 async function isMACAddonEnabled () {
   try {
@@ -180,7 +80,7 @@ async function sendJailedDomainsToMAC () {
   try {
     return await browser.runtime.sendMessage(MAC_ADDON_ID, {
       method: "jailedDomains",
-      urls: AMAZON_DOMAINS.map((domain) => {
+      urls: ALIBABA_DOMAINS.map((domain) => {
         return `https://${domain}/`;
       })
     });
@@ -249,14 +149,14 @@ function shouldCancelEarly (tab, options) {
   return false;
 }
 
-function generateAmazonHostREs () {
-  for (let amazonDomain of AMAZON_DOMAINS) {
-    amazonHostREs.push(new RegExp(`^(.*\\.)?${amazonDomain}$`));
+function generateAlibabaHostREs () {
+  for (let alibabaDomain of ALIBABA_DOMAINS) {
+    alibabaHostREs.push(new RegExp(`^(.*\\.)?${alibabaDomain}$`));
   }
 }
 
-async function clearAmazonCookies () {
-  // Clear all amazon cookies
+async function clearAlibabaCookies () {
+  // Clear all alibaba cookies
   const containers = await browser.contextualIdentities.query({});
   containers.push({
     cookieStoreId: "firefox-default"
@@ -264,76 +164,76 @@ async function clearAmazonCookies () {
 
   let macAssignments = [];
   if (macAddonEnabled) {
-    const promises = AMAZON_DOMAINS.map(async amazonDomain => {
-      const assigned = await getMACAssignment(`https://${amazonDomain}/`);
-      return assigned ? amazonDomain : null;
+    const promises = ALIBABA_DOMAINS.map(async alibabaDomain => {
+      const assigned = await getMACAssignment(`https://${alibabaDomain}/`);
+      return assigned ? alibabaDomain : null;
     });
     macAssignments = await Promise.all(promises);
   }
 
-  AMAZON_DOMAINS.map(async amazonDomain => {
-    const amazonCookieUrl = `https://${amazonDomain}/`;
+  ALIBABA_DOMAINS.map(async alibabaDomain => {
+    const alibabaCookieUrl = `https://${alibabaDomain}/`;
 
-    // dont clear cookies for amazonDomain if mac assigned (with or without www.)
+    // dont clear cookies for alibabaDomain if mac assigned (with or without www.)
     if (macAddonEnabled &&
-        (macAssignments.includes(amazonDomain) ||
-         macAssignments.includes(`www.${amazonDomain}`))) {
+        (macAssignments.includes(alibabaDomain) ||
+         macAssignments.includes(`www.${alibabaDomain}`))) {
       return;
     }
 
     containers.map(async container => {
       const storeId = container.cookieStoreId;
-      if (storeId === amazonCookieStoreId) {
-        // Don't clear cookies in the Amazon Container
+      if (storeId === alibabaCookieStoreId) {
+        // Don't clear cookies in the Alibaba Container
         return;
       }
 
       const cookies = await browser.cookies.getAll({
-        domain: amazonDomain,
+        domain: alibabaDomain,
         storeId
       });
 
       cookies.map(cookie => {
         browser.cookies.remove({
           name: cookie.name,
-          url: amazonCookieUrl,
+          url: alibabaCookieUrl,
           storeId
         });
       });
       // Also clear Service Workers as it breaks detecting onBeforeRequest
-      await browser.browsingData.remove({hostnames: [amazonDomain]}, {serviceWorkers: true});
+      await browser.browsingData.remove({hostnames: [alibabaDomain]}, {serviceWorkers: true});
     });
   });
 }
 
 async function setupContainer () {
-  // Use existing Amazon container, or create one
+  // Use existing Alibaba container, or create one
 
   const info = await browser.runtime.getBrowserInfo();
   if (parseInt(info.version) < 67) {
-    AMAZON_CONTAINER_DETAILS.color = "orange";
-    AMAZON_CONTAINER_DETIALS.color = "briefcase";
+    ALIBABA_CONTAINER_DETAILS.color = "orange";
+    ALIBABA_CONTAINER_DETIALS.color = "briefcase";
   }
 
-  const contexts = await browser.contextualIdentities.query({name: AMAZON_CONTAINER_DETAILS.name});
+  const contexts = await browser.contextualIdentities.query({name: ALIBABA_CONTAINER_DETAILS.name});
   if (contexts.length > 0) {
-    const amazonContext = contexts[0];
-    amazonCookieStoreId = amazonContext.cookieStoreId;
-    if (amazonContext.color !== AMAZON_CONTAINER_DETAILS.color ||
-        amazonContext.icon !== AMAZON_CONTAINER_DETAILS.icon) {
+    const alibabaContext = contexts[0];
+    alibabaCookieStoreId = alibabaContext.cookieStoreId;
+    if (alibabaContext.color !== ALIBABA_CONTAINER_DETAILS.color ||
+        alibabaContext.icon !== ALIBABA_CONTAINER_DETAILS.icon) {
           await browser.contextualIdentities.update(
-            amazonCookieStoreId,
-            { color: AMAZON_CONTAINER_DETAILS.color, icon: AMAZON_CONTAINER_DETAILS.icon }
+            alibabaCookieStoreId,
+            { color: ALIBABA_CONTAINER_DETAILS.color, icon: ALIBABA_CONTAINER_DETAILS.icon }
           );
     }
   } else {
-    const context = await browser.contextualIdentities.create(AMAZON_CONTAINER_DETAILS);
-    amazonCookieStoreId = context.cookieStoreId;
+    const context = await browser.contextualIdentities.create(ALIBABA_CONTAINER_DETAILS);
+    alibabaCookieStoreId = context.cookieStoreId;
   }
 
   const azcStorage = await browser.storage.local.get();
-  if (!azcStorage.domainsAddedToAmazonContainer) {
-    await browser.storage.local.set({ "domainsAddedToAmazonContainer": [] });
+  if (!azcStorage.domainsAddedToAlibabaContainer) {
+    await browser.storage.local.set({ "domainsAddedToAlibabaContainer": [] });
   }
 }
 
@@ -365,10 +265,10 @@ async function maybeReopenTab(url, tab, request) {
   return { cancel: true };
 }
 
-function isAmazonURL (url) {
+function isAlibabaURL (url) {
   const parsedUrl = new URL(url);
-  for (let amazonHostRE of amazonHostREs) {
-    if (amazonHostRE.test(parsedUrl.host)) {
+  for (let alibabaHostRE of alibabaHostREs) {
+    if (alibabaHostRE.test(parsedUrl.host)) {
       return true;
     }
   }
@@ -380,25 +280,25 @@ async function supportsSiteSubdomainCheck(url) {
   return;
 }
 
-async function addDomainToAmazonContainer (url) {
+async function addDomainToAlibabaContainer (url) {
   const parsedUrl = new URL(url);
   const azcStorage = await browser.storage.local.get();
-  azcStorage.domainsAddedToAmazonContainer.push(parsedUrl.host);
-  await browser.storage.local.set({"domainsAddedToAmazonContainer": azcStorage.domainsAddedToAmazonContainer});
+  azcStorage.domainsAddedToAlibabaContainer.push(parsedUrl.host);
+  await browser.storage.local.set({"domainsAddedToAlibabaContainer": azcStorage.domainsAddedToAlibabaContainer});
   await supportSiteSubdomainCheck(parsedUrl.host);
 }
 
-async function removeDomainFromAmazonContainer (domain) {
+async function removeDomainFromAlibabaContainer (domain) {
   const azcStorage = await browser.storage.local.get();
-  const domainIndex = azcStorage.domainsAddedToAmazonContainer.indexOf(domain);
-  azcStorage.domainsAddedToAmazonContainer.splice(domainIndex, 1);
-  await browser.storage.local.set({"domainsAddedToAmazonContainer": azcStorage.domainsAddedToAmazonContainer});
+  const domainIndex = azcStorage.domainsAddedToAlibabaContainer.indexOf(domain);
+  azcStorage.domainsAddedToAlibabaContainer.splice(domainIndex, 1);
+  await browser.storage.local.set({"domainsAddedToAlibabaContainer": azcStorage.domainsAddedToAlibabaContainer});
 }
 
-async function isAddedToAmazonContainer (url) {
+async function isAddedToAlibabaContainer (url) {
   const parsedUrl = new URL(url);
   const azcStorage = await browser.storage.local.get();
-  if (azcStorage.domainsAddedToAmazonContainer.includes(parsedUrl.host)) {
+  if (azcStorage.domainsAddedToAlibabaContainer.includes(parsedUrl.host)) {
     return true;
   }
   return false;
@@ -410,16 +310,16 @@ async function shouldContainInto (url, tab) {
     return false;
   }
 
-  const hasBeenAddedToAmazonContainer = await isAddedToAmazonContainer(url);
+  const hasBeenAddedToAlibabaContainer = await isAddedToAlibabaContainer(url);
 
-  if (isAmazonURL(url) || hasBeenAddedToAmazonContainer) {
-    if (tab.cookieStoreId !== amazonCookieStoreId) {
-      // Amazon-URL outside of Amazon Container Tab
-      // Should contain into Amazon Container
-      return amazonCookieStoreId;
+  if (isAlibabaURL(url) || hasBeenAddedToAlibabaContainer) {
+    if (tab.cookieStoreId !== alibabaCookieStoreId) {
+      // Alibaba-URL outside of Alibaba Container Tab
+      // Should contain into Alibaba Container
+      return alibabaCookieStoreId;
     }
-  } else if (tab.cookieStoreId === amazonCookieStoreId) {
-    // Non-Amazon-URL inside Amazon Container Tab
+  } else if (tab.cookieStoreId === alibabaCookieStoreId) {
+    // Non-Alibaba-URL inside Alibaba Container Tab
     // Should contain into Default Container
     return "firefox-default";
   }
@@ -495,12 +395,12 @@ async function updateBrowserActionIcon (tab) {
   browser.browserAction.setBadgeText({text: ""});
 
   const url = tab.url;
-  const hasBeenAddedToAmazonContainer = await isAddedToAmazonContainer(url);
+  const hasBeenAddedToAlibabaContainer = await isAddedToAlibabaContainer(url);
 
-  if (isAmazonURL(url)) {
-    browser.storage.local.set({"CURRENT_PANEL": "on-amazon"});
+  if (isAlibabaURL(url)) {
+    browser.storage.local.set({"CURRENT_PANEL": "on-alibaba"});
     browser.browserAction.setPopup({tabId: tab.id, popup: "./panel.html"});
-  } else if (hasBeenAddedToAmazonContainer) {
+  } else if (hasBeenAddedToAlibabaContainer) {
     browser.storage.local.set({"CURRENT_PANEL": "in-azc"});
   } else {
     const tabState = tabStates[tab.id];
@@ -514,7 +414,7 @@ async function updateBrowserActionIcon (tab) {
   }
 }
 
-async function containAmazon (request) {
+async function containAlibaba (request) {
   if (tabsWaitingToLoad[request.tabId]) {
     // Cleanup just to make sure we don't get a race-condition with startup reopening
     delete tabsWaitingToLoad[request.tabId];
@@ -529,7 +429,7 @@ async function containAmazon (request) {
   if (urlSearchParm.has("azclid")) {
     return {redirectUrl: stripAzclid(request.url)};
   }
-  // Listen to requests and open Amazon into its Container,
+  // Listen to requests and open Alibaba into its Container,
   // open other sites into the default tab context
   if (request.tabId === -1) {
     // Request doesn't belong to a tab
@@ -541,7 +441,7 @@ async function containAmazon (request) {
 
 // Lots of this is borrowed from old blok code:
 // https://github.com/mozilla/blok/blob/master/src/js/background.js
-async function blockAmazonSubResources (requestDetails) {
+async function blockAlibabaSubResources (requestDetails) {
   if (requestDetails.type === "main_frame") {
     return {};
   }
@@ -550,32 +450,32 @@ async function blockAmazonSubResources (requestDetails) {
     return {};
   }
 
-  const urlIsAmazon = isAmazonURL(requestDetails.url);
-  const originUrlIsAmazon = isAmazonURL(requestDetails.originUrl);
+  const urlIsAlibaba = isAlibabaURL(requestDetails.url);
+  const originUrlIsAlibaba = isAlibabaURL(requestDetails.originUrl);
 
-  if (!urlIsAmazon) {
+  if (!urlIsAlibaba) {
     return {};
   }
 
-  if (originUrlIsAmazon) {
-    const message = {msg: "amazon-domain"};
+  if (originUrlIsAlibaba) {
+    const message = {msg: "alibaba-domain"};
     // Send the message to the content_script
     browser.tabs.sendMessage(requestDetails.tabId, message);
     return {};
   }
 
-  const hasBeenAddedToAmazonContainer = await isAddedToAmazonContainer(requestDetails.originUrl);
+  const hasBeenAddedToAlibabaContainer = await isAddedToAlibabaContainer(requestDetails.originUrl);
 
-  if (urlIsAmazon && !originUrlIsAmazon) {
-    if (!hasBeenAddedToAmazonContainer ) {
-      const message = {msg: "blocked-amazon-subresources"};
+  if (urlIsAlibaba && !originUrlIsAlibaba) {
+    if (!hasBeenAddedToAlibabaContainer ) {
+      const message = {msg: "blocked-alibaba-subresources"};
       // Send the message to the content_script
       browser.tabs.sendMessage(requestDetails.tabId, message);
 
       tabStates[requestDetails.tabId] = { trackersDetected: true };
       return {cancel: true};
     } else {
-      const message = {msg: "allowed-amazon-subresources"};
+      const message = {msg: "allowed-alibaba-subresources"};
       // Send the message to the content_script
       browser.tabs.sendMessage(requestDetails.tabId, message);
       return {};
@@ -597,10 +497,10 @@ function setupWebRequestListeners() {
   },{urls: ["<all_urls>"], types: ["main_frame"]});
 
   // Add the main_frame request listener
-  browser.webRequest.onBeforeRequest.addListener(containAmazon, {urls: ["<all_urls>"], types: ["main_frame"]}, ["blocking"]);
+  browser.webRequest.onBeforeRequest.addListener(containAlibaba, {urls: ["<all_urls>"], types: ["main_frame"]}, ["blocking"]);
 
   // Add the sub-resource request listener
-  browser.webRequest.onBeforeRequest.addListener(blockAmazonSubResources, {urls: ["<all_urls>"]}, ["blocking"]);
+  browser.webRequest.onBeforeRequest.addListener(blockAlibabaSubResources, {urls: ["<all_urls>"]}, ["blocking"]);
 }
 
 function setupWindowsAndTabsListeners() {
@@ -618,23 +518,23 @@ function setupWindowsAndTabsListeners() {
   } catch (error) {
     // TODO: Needs backup strategy
     // See ...
-    // Sometimes this add-on is installed but doesn't get a amazonCookieStoreId ?
+    // Sometimes this add-on is installed but doesn't get a alibabaCookieStoreId ?
     // eslint-disable-next-line no-console
     console.log(error);
     return;
   }
-  clearAmazonCookies();
-  generateAmazonHostREs();
+  clearAlibabaCookies();
+  generateAlibabaHostREs();
   setupWebRequestListeners();
   setupWindowsAndTabsListeners();
 
   browser.runtime.onMessage.addListener( (message, {url}) => {
     if (message === "what-sites-are-added") {
-      return browser.storage.local.get().then(azcStorage => azcStorage.domainsAddedToAmazonContainer);
+      return browser.storage.local.get().then(azcStorage => azcStorage.domainsAddedToAlibabaContainer);
     } else if (message.removeDomain) {
-      removeDomainFromAmazonContainer(message.removeDomain).then( results => results );
+      removeDomainFromAlibabaContainer(message.removeDomain).then( results => results );
     } else {
-      addDomainToAmazonContainer(url).then( results => results);
+      addDomainToAlibabaContainer(url).then( results => results);
     }
   });
 
