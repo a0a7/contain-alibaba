@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Alibaba Container",
     "version": "0.0.1",
-
+    "author": "lev",
     "description": "Alibaba Container isolates your Alibaba and Aliexpress activity from the rest of your web activity in order to prevent Alibaba from tracking you outside of their ecosystem via third party cookies.",
 
     "icons": {

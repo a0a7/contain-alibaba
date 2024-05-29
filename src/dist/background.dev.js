@@ -10,18 +10,13 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _readOnlyError(name) { throw new Error("\"" + name + "\" is read-only"); }
-
 // Param values from https://developer.mozilla.org/Add-ons/WebExtensions/API/contextualIdentities/create
 var ALIBABA_CONTAINER_DETAILS = {
   name: "Alibaba",
   color: "orange",
-  icon: "briefcase"
+  icon: "cart"
 };
-var ALIBABA_DOMAINS = ["alibabacloud.com", "alibaba.com", "alibaba.us", ""];
-var ALIEXPRESS_DOMAINS = [];
-var ALIBABA_SERVICES_DOMAINS = [];
-ALIBABA_DOMAINS = (_readOnlyError("ALIBABA_DOMAINS"), ALIBABA_DOMAINS.concat(ALIBABA_DOMAINS, ALIEXPRESS_DOMAINS, ALIBABA_SERVICES_DOMAINS));
+var ALIBABA_DOMAINS = ["alibabacloud.com", "alibaba.com", "alibaba.us", "alibaba.uk", "aliapp.org", "alibabacorp.com", "alibabagroup.com", "alibaba-inc.com", "alihealth.cn", "tmall.hk", "1688.com", "tmall.com", "taobao.com", "freshhema.com", "sunretail.com", "intime.com.cn", "aliexpress.com", "aliexpress.us", "lazada.cn", "trendyol.com", "daraz.com", "ele.me", "amap.com", "fliggy.com", "youku.com", "alibabapictures.com", "lingxigames.com", "damai.cn", "myquark.cn", "uc.cn", "cainiao.com", "aliyun.com", "dingtalk.com", "alibabafoundation.com", "ent-fund.org", "ae-rus.net", "ae-rus.ru", "aliexpress.ru", "alibaba", "alibabaplanet.com", "alicdn.com"];
 var MAC_ADDON_ID = "@testpilot-containers";
 var macAddonEnabled = false;
 var alibabaCookieStoreId = null;
