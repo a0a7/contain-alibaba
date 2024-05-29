@@ -6,13 +6,13 @@
     "description": "Alibaba Container isolates your Alibaba and Aliexpress activity from the rest of your web activity in order to prevent Alibaba from tracking you outside of their ecosystem via third party cookies.",
 
     "icons": {
-        "48": "icon.svg",
-        "96": "icon.svg"
+        "48": "logo-48.png",
+        "96": "logo-96.png"
     },
 
     "applications": {
       "gecko": {
-        "id": "@contain-amzn",
+        "id": "contain-ali@lev",
         "strict_min_version": "67.0"
       }
     },
