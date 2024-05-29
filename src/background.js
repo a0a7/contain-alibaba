@@ -2,28 +2,52 @@
 const ALIBABA_CONTAINER_DETAILS = {
   name: "Alibaba",
   color: "orange",
-  icon: "briefcase"
+  icon: "cart"
 };
 
 const ALIBABA_DOMAINS = [
   "alibabacloud.com",
   "alibaba.com",
   "alibaba.us",
-  ""
+  "alibaba.uk",
+  "aliapp.org",
+  "alibabacorp.com",
+  "alibabagroup.com",
+  "alibaba-inc.com",
+  "alihealth.cn",
+  "tmall.hk",
+  "1688.com",
+  "tmall.com",
+  "taobao.com",
+  "freshhema.com",
+  "sunretail.com",
+  "intime.com.cn",
+  "aliexpress.com",
+  "aliexpress.us",
+  "lazada.cn",
+  "trendyol.com",
+  "daraz.com",
+  "ele.me",
+  "amap.com",
+  "fliggy.com",
+  "youku.com",
+  "alibabapictures.com",
+  "lingxigames.com",
+  "damai.cn",
+  "myquark.cn",
+  "uc.cn",
+  "cainiao.com",
+  "aliyun.com",
+  "dingtalk.com",
+  "alibabafoundation.com",
+  "ent-fund.org",
+  "ae-rus.net",
+  "ae-rus.ru",
+  "aliexpress.ru",
+  "alibaba",
+  "alibabaplanet.com",
+  "alicdn.com",
 ];
-
-const ALIEXPRESS_DOMAINS = [
-];
-
-const ALIBABA_SERVICES_DOMAINS = [
-];
-
-
-ALIBABA_DOMAINS = ALIBABA_DOMAINS.concat(
-  ALIBABA_DOMAINS, 
-  ALIEXPRESS_DOMAINS, 
-  ALIBABA_SERVICES_DOMAINS
-);
 
 const MAC_ADDON_ID = "@testpilot-containers";
 
