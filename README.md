@@ -1,4 +1,4 @@
-# Amazon Container
+# ![logo36](https://github.com/syslev/contain-alibaba/assets/61996958/0bec8035-7879-4cc1-b2c8-75a13fd2f7e2) Alibaba Container
 
 **Prevent Alibaba Group from tracking your visits to other websites**
 
@@ -10,4 +10,4 @@ Krober's [Amazon Container](https://github.com/krober/contain-amazon/) was the i
 
 # Installation
 
-Install this firefox extension from the Mozilla store: https://addons.mozilla.org/en-US/firefox/addon/contain-alibaba/
+Install this Firefox extension from the Mozilla store: https://addons.mozilla.org/en-US/firefox/addon/contain-alibaba/
