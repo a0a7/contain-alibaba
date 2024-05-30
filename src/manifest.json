@@ -1,8 +1,7 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
     "name": "Alibaba Container",
     "version": "0.0.1",
-    "author": "Alexander Weimer",
     "description": "Alibaba Container isolates your Alibaba and Aliexpress activity from the rest of your web activity in order to prevent Alibaba from tracking you outside of their ecosystem via third party cookies.",
 
     "icons": {
@@ -10,7 +9,7 @@
         "96": "logo-96.png"
     },
 
-    "browser_specific_settings": {
+    "applications": {
       "gecko": {
         "id": "contain-alibaba@alexanderweimer.com",
         "strict_min_version": "67.0"
@@ -20,60 +19,18 @@
     "homepage_url": "https://github.com/syslev/contain-alibaba",
 
     "permissions": [
-        "browsingData",
-        "contextualIdentities",
-        "cookies",
-        "management",
-        "storage",
-        "tabs",
-        "webRequestBlocking",
-        "webRequest"
-    ],
+      "<all_urls>",
+      "browsingData",
+      "contextualIdentities",
+      "cookies",
+      "management",
+      "storage",
+      "tabs",
+      "webRequestBlocking",
+      "webRequest"
+  ],
 
     "background": {
         "scripts": ["background.js"]
-    },
-    "host_permissions": [
-      "*://*.alibabacloud.com/*",
-      "*://*.alibaba.com/*",
-      "*://*.alibaba.us/*",
-      "*://*.alibaba.uk/*",
-      "*://*.aliapp.org/*",
-      "*://*.alibabacorp.com/*",
-      "*://*.alibabagroup.com/*",
-      "*://*.alibaba-inc.com/*",
-      "*://*.alihealth.cn/*",
-      "*://*.tmall.hk/*",
-      "*://*.1688.com/*",
-      "*://*.tmall.com/*",
-      "*://*.taobao.com/*",
-      "*://*.freshhema.com/*",
-      "*://*.sunretail.com/*",
-      "*://*.intime.com.cn/*",
-      "*://*.aliexpress.com/*",
-      "*://*.aliexpress.us/*",
-      "*://*.lazada.cn/*",
-      "*://*.trendyol.com/*",
-      "*://*.daraz.com/*",
-      "*://*.ele.me/*",
-      "*://*.amap.com/*",
-      "*://*.fliggy.com/*",
-      "*://*.youku.com/*",
-      "*://*.alibabapictures.com/*",
-      "*://*.lingxigames.com/*",
-      "*://*.damai.cn/*",
-      "*://*.myquark.cn/*",
-      "*://*.uc.cn/*",
-      "*://*.cainiao.com/*",
-      "*://*.aliyun.com/*",
-      "*://*.dingtalk.com/*",
-      "*://*.alibabafoundation.com/*",
-      "*://*.ent-fund.org/*",
-      "*://*.ae-rus.net/*",
-      "*://*.ae-rus.ru/*",
-      "*://*.aliexpress.ru/*",
-      "*://*.alibaba/*",
-      "*://*.alibabaplanet.com/*",
-      "*://*.alicdn.com/*"
-    ]
+    }
 }
